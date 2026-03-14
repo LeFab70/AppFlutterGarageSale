@@ -3,6 +3,8 @@ import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:test1_appgardienbut_fabrice/views/shared/widgets/logo.widget.dart';
 import 'package:test1_appgardienbut_fabrice/views/shared/widgets/textfield.widget.dart';
+import 'package:test1_appgardienbut_fabrice/views/ui/main.screen.dart';
+import 'package:test1_appgardienbut_fabrice/views/ui/signup.screen.dart';
 import '../shared/styles/app.style.dart';
 import '../../controllers/login.provider.dart';
 import '../shared/colors/colors.app.dart';
@@ -17,6 +19,48 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
+
+
+
+  void _login() async {
+    final email = _emailTextController.text.trim();
+    final password = _passwordTextController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage("Tous les champs doivent être remplis.");
+      return;
+    }
+
+    try {
+      // // Appel au provider pour login
+      // bool success = await Provider.of<LoginProvider>(context, listen: false)
+      //     .loginWithCredentials(email, password);
+
+       bool success =true; //a ajuster
+
+      if (success) {
+        _showMessage("Connexion réussie !", isSuccess: true);
+        // naviguer vers la page principale de app
+        await Future.delayed(const Duration(seconds: 1));
+        Provider.of<LoginProvider>(context, listen: false).login(email: email, password: password);
+
+      } else {
+        _showMessage("Email ou mot de passe incorrect.");
+      }
+    } catch (e) {
+      _showMessage("Erreur lors de la connexion.");
+    }
+  }
+
+  void _showMessage(String message, {bool isSuccess = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message,style: TextStyle(fontSize: 15,fontWeight: .bold),),
+        backgroundColor: isSuccess ? Colors.green.shade400 : Colors.red.shade400,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,11 +146,18 @@ class _LoginPageState extends State<LoginPage> {
                                 minimumSize: Size(0, 30),
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Signup(),
+                                  ),
+                                );
+                              },
                               child: const Text("Pas de compte ? Créer en un"),
                             ),
                           ],
-                        )
+                        ),
                       ),
 
                       const SizedBox(height: 10),
@@ -119,29 +170,26 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        onPressed: () {
-                          // On déclenche la connexion
-                          Provider.of<LoginProvider>(
-                            context,
-                            listen: false,
-                          ).login();
-                        },
-                        child:
-                          Row(
-                            mainAxisAlignment: .spaceAround,
-                            crossAxisAlignment: .center,
-                            children: [
-                              Icon(Ionicons.log_in_outline,size: 30,color: Colors.white,),
-                              Text(
-                                "Se connecter",
-                                style: TextStyle(
-                                    color: AppColors.buttonTextColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 25
-                                ),
+                        onPressed: _login,
+                        child: Row(
+                          mainAxisAlignment: .spaceAround,
+                          crossAxisAlignment: .center,
+                          children: [
+                            Icon(
+                              Ionicons.log_in_outline,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "Se connecter",
+                              style: TextStyle(
+                                color: AppColors.buttonTextColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25,
                               ),
-                            ],
-                          )
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
