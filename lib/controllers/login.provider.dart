@@ -18,39 +18,54 @@ class LoginProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    await Future.delayed(const Duration(seconds: 2)); // requête serveur
-    notifyListeners();
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       _isLoggedIn = true;
-      _isLoading = false;
-      notifyListeners();
       return null;
     } on FirebaseAuthException catch (e) {
+      debugPrint("Firebase error: ${e.code}");
+      return "Email ou mot de passe incorrect.";
+    } catch (e) {
+      debugPrint("Error: $e");
+      return "Erreur lors de la connexion.";
+    } finally {
       _isLoading = false;
       notifyListeners();
-      return e.message;
     }
   }
   Future<String?> signup({required String email, required String password}) async {
     _isLoading = true;
     notifyListeners();
-    try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      _isLoggedIn = true;
-      _isLoading = false;
-      notifyListeners();
-      return null;
-    } on FirebaseAuthException catch (e) {
-      _isLoading = false;
-      notifyListeners();
-      return e.message;
-    }
-   finally {
-  _isLoading = false;
-  notifyListeners();
-  }
 
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      _isLoggedIn = true;
+      return null;
+
+    } on FirebaseAuthException catch (e) {
+
+      if (e.code == 'email-already-in-use') {
+        return "Cet email est déjà utilisé.";
+      }
+
+      if (e.code == 'weak-password') {
+        return "Mot de passe trop faible (minimum 6 caractères).";
+      }
+
+      if (e.code == 'invalid-email') {
+        return "Adresse email invalide.";
+      }
+
+      return "Erreur lors de la création du compte.";
+
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
   Future<void> logout() async {
     await _auth.signOut();

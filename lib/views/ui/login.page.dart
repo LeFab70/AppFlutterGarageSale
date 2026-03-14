@@ -32,25 +32,35 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
-      // // Appel au provider pour login
       String? error = await Provider.of<LoginProvider>(context, listen: false)
           .login(email: email, password: password);
 
+      if (!mounted) return;
+
       if (error != null) {
-        _showMessage(error); // affiche l'erreur Firebase
+        debugPrint("error $error");
+        _showMessage(error);
       } else {
         _showMessage("Connexion réussie !", isSuccess: true);
       }
+
     } catch (e) {
+      if (!mounted) return;
       _showMessage("Erreur lors de la connexion.");
     }
   }
 
   void _showMessage(String message, {bool isSuccess = false}) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message,style: TextStyle(fontSize: 15,fontWeight: .bold),),
-        backgroundColor: isSuccess ? Colors.green.shade400 : Colors.red.shade400,
+        content: Text(
+          message,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor:
+        isSuccess ? Colors.green.shade400 : Colors.red.shade400,
         duration: const Duration(seconds: 3),
       ),
     );
@@ -164,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        onPressed: _login,
+                        onPressed: context.watch<LoginProvider>().isLoading ? null : _login,
                         child: Row(
                           mainAxisAlignment: .spaceAround,
                           crossAxisAlignment: .center,
