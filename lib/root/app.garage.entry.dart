@@ -5,8 +5,8 @@ import '../controllers/login.provider.dart';
 import '../views/ui/main.screen.dart';
 import '../views/shared/colors/colors.app.dart';
 
-class AppGardienbutEntry extends StatelessWidget {
-  const AppGardienbutEntry({super.key});
+class AppGarageEntry extends StatelessWidget {
+  const AppGarageEntry({super.key});
 
   @override
   Widget build(BuildContext context) {

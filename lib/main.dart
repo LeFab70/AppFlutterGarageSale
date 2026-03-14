@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'controllers/teams.provider.dart';
 import 'controllers/login.provider.dart';
 import 'controllers/main.screen.provider.dart';
-import 'root/app.gardienbut.entry.dart';
+import 'root/app.garage.entry.dart';
 
 void main() => runApp(
   //Mise en place du provider pour gerer le changement de pages depuis le bottomNavigationBar
@@ -16,6 +16,6 @@ void main() => runApp(
       //provider pour gerer les teams
       ChangeNotifierProvider(create: (_) => TeamsProvider()),
     ],
-    child: const AppGardienbutEntry(),
+    child: const AppGarageEntry(),
   ),
 );
