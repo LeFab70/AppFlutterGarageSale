@@ -55,15 +55,15 @@ class _SignupState extends State<Signup> {
     });
 
     try {
-      // service pour créer le compte
-      // await Provider.of<LoginProvider>(context, listen: false)
-      //     .signup(email, password);
+      String? error = await Provider.of<LoginProvider>(context, listen: false)
+          .signup(email: email, password: password);
 
-      setState(() {
-        _isLoading = false;
-      });
+      if (error != null) {
+        _showMessage(error);
+      } else {
+        _showMessage("Compte créé avec succès !", isSuccess: true);
+      }
 
-      _showMessage("Compte créé avec succès !", isSuccess: true);
     } catch (e) {
       setState(() {
         _isLoading = false;

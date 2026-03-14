@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "871336841990",
+    "project_id": "appgarage-58527",
+    "storage_bucket": "appgarage-58527.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871336841990:android:6a7d81aff0405c8c394487",
+        "android_client_info": {
+          "package_name": "com.example.test1_appgardienbut_fabrice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEl1P3nLR9PXiS-spDn52lZ00uXAbxUEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -33,19 +33,13 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       // // Appel au provider pour login
-      // bool success = await Provider.of<LoginProvider>(context, listen: false)
-      //     .loginWithCredentials(email, password);
+      String? error = await Provider.of<LoginProvider>(context, listen: false)
+          .login(email: email, password: password);
 
-       bool success =true; //a ajuster
-
-      if (success) {
-        _showMessage("Connexion réussie !", isSuccess: true);
-        // naviguer vers la page principale de app
-        await Future.delayed(const Duration(seconds: 1));
-        Provider.of<LoginProvider>(context, listen: false).login(email: email, password: password);
-
+      if (error != null) {
+        _showMessage(error); // affiche l'erreur Firebase
       } else {
-        _showMessage("Email ou mot de passe incorrect.");
+        _showMessage("Connexion réussie !", isSuccess: true);
       }
     } catch (e) {
       _showMessage("Erreur lors de la connexion.");
