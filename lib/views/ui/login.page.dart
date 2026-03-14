@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
+import 'package:test1_appgardienbut_fabrice/views/shared/widgets/logo.widget.dart';
+import 'package:test1_appgardienbut_fabrice/views/shared/widgets/textfield.widget.dart';
 import '../shared/styles/app.style.dart';
 import '../../controllers/login.provider.dart';
 import '../shared/colors/colors.app.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController _passwordTextController = TextEditingController();
+  TextEditingController _emailTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,47 +29,128 @@ class LoginPage extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               AppColors.primary,
+              AppColors.secondary,
               AppColors.backgroundApp,
-              AppColors.backgroundLight,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(30.0),
+          padding: const EdgeInsets.all(20.0),
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).size.height*0.2,20 ,0),
-            child:
-              const Text("", style: TextStyle(fontSize: 80)),
+            padding: EdgeInsets.fromLTRB(
+              20,
+              MediaQuery.of(context).size.height * 0.2,
+              20,
+              0,
+            ),
+            child: Column(
+              children: [
+                //utilisation des widgets decomposés
+                Center(child: logoWidget("assets/images/salegarage.jpg")),
+                SizedBox(height: 30),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      myTextField(
+                        "Nom utilisateur",
+                        Ionicons.person_circle_sharp,
+                        false,
+                        _emailTextController,
+                      ),
 
+                      const SizedBox(height: 20),
+
+                      myTextField(
+                        "Mot de passe",
+                        Ionicons.lock_closed,
+                        true,
+                        _passwordTextController,
+                      ),
+                      const SizedBox(height: 5),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Column(
+                          mainAxisSize: .min,
+                          crossAxisAlignment: .end,
+                          children: [
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                minimumSize: Size(0, 30),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              onPressed: () {},
+                              child: const Text("Mot de passe oublié ?"),
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                minimumSize: Size(0, 30),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              onPressed: () {},
+                              child: const Text("Pas de compte ? Créer en un"),
+                            ),
+                          ],
+                        )
+                      ),
+
+                      const SizedBox(height: 10),
+                      // // Bouton pour se connecter
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.buttonBackground,
+                          minimumSize: const Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {
+                          // On déclenche la connexion
+                          Provider.of<LoginProvider>(
+                            context,
+                            listen: false,
+                          ).login();
+                        },
+                        child:
+                          Row(
+                            mainAxisAlignment: .spaceAround,
+                            crossAxisAlignment: .center,
+                            children: [
+                              Icon(Ionicons.log_in_outline,size: 30,color: Colors.white,),
+                              Text(
+                                "Se connecter",
+                                style: TextStyle(
+                                    color: AppColors.buttonTextColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25
+                                ),
+                              ),
+                            ],
+                          )
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-
-
-// // Bouton pour se connecter
-// ElevatedButton(
-// style: ElevatedButton.styleFrom(
-// backgroundColor: AppColors.buttonBackground,
-// minimumSize: const Size(double.infinity, 55),
-// shape: RoundedRectangleBorder(
-// borderRadius: BorderRadius.circular(12),
-// ),
-// ),
-// onPressed: () {
-// // On déclenche la connexion
-// Provider.of<LoginProvider>(context, listen: false).login();
-// },
-// child: Text(
-// "Se connecter",
-// style: TextStyle(
-// color: AppColors.buttonTextColor,
-// fontWeight: FontWeight.bold,
-// ),
-// ),
-// ),
-//
