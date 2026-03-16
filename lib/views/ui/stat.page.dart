@@ -3,7 +3,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:test1_appgardienbut_fabrice/views/shared/styles/app.style.dart';
 
-import '../../controllers/teams.provider.dart';
+import '../../controllers/garage.provider.dart';
 import '../../models/game.dart';
 import '../shared/colors/colors.app.dart';
 
@@ -17,7 +17,7 @@ class StatPage extends StatefulWidget {
 class _StatPageState extends State<StatPage> {
   // Affiche la modale de saisie des scores
   void _showInputStatsModal(BuildContext context, Game game, String homeGk, String visitorGk) {
-    final provider = Provider.of<TeamsProvider>(context, listen: false);
+    final provider = Provider.of<GarageProvider>(context, listen: false);
     int hShots = 0, hGoals = 0, vShots = 0, vGoals = 0;
 
     showModalBottomSheet(
@@ -53,12 +53,12 @@ class _StatPageState extends State<StatPage> {
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, padding: const EdgeInsets.all(15)),
                   onPressed: () {
                     // Enregistre et ferme
-                    provider.updateMatchResults(
-                      gameId: game.id,
-                      homeShots: hShots, homeGoals: hGoals,
-                      visitorShots: vShots, visitorGoals: vGoals,
-                    );
-                    Navigator.pop(context);
+                    // provider.updateMatchResults(
+                    //   gameId: game.id,
+                    //   homeShots: hShots, homeGoals: hGoals,
+                    //   visitorShots: vShots, visitorGoals: vGoals,
+                    // );
+                    // Navigator.pop(context);
                   },
                   child: const Text("VALIDER LES STATS", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
@@ -105,7 +105,7 @@ class _StatPageState extends State<StatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TeamsProvider>(
+    return Consumer<GarageProvider>(
       builder: (context, provider, child) {
         return Column(
           children: [
@@ -141,50 +141,50 @@ class _StatPageState extends State<StatPage> {
             ),
 
             // Liste des matchs
-            Expanded(
-              child: provider.games.isEmpty
-                  ? Center(child: Text("Aucunes ventes pour le moment", style: appStyle(18, AppColors.secondary, FontWeight.w400)))
-                  : ListView.builder(
-                itemCount: provider.games.length,
-                itemBuilder: (context, index) {
-                  final game = provider.games[index];
-                  final homeTeam = provider.teams.firstWhere((t) => t.id == game.homeTeamId);
-                  final visitorTeam = provider.teams.firstWhere((t) => t.id == game.visitorTeamId);
-                  final homeGk = provider.goalkeepers.firstWhere((g) => g.id == game.homeGkStats.goalkeeperId);
-                  final visitorGk = provider.goalkeepers.firstWhere((g) => g.id == game.visitorGkStats.goalkeeperId);
-
-                  return Card(
-                    color: AppColors.backgroundLight,
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: ExpansionTile(
-                      leading: _buildVsLogos(homeTeam.urlLogo, visitorTeam.urlLogo),
-                      iconColor: AppColors.primary,
-                      collapsedIconColor: AppColors.secondary,
-                      title: Text("${homeTeam.name} vs ${visitorTeam.name}", style: appStyle(15, AppColors.primary, FontWeight.bold)),
-                      subtitle: Text(
-                        "${game.date.day}/${game.date.month} à ${game.date.hour}h${game.date.minute.toString().padLeft(2, '0')}",
-                        style: appStyle(13, AppColors.secondary, FontWeight.w500),
-                      ),
-                      children: [
-                        // Affiche bouton ou résumé selon statut match
-                        if (!game.isFinished)
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-                              onPressed: () => _showInputStatsModal(context, game, homeGk.name, visitorGk.name),
-                              icon: const Icon(Icons.edit, color: Colors.white),
-                              label: const Text("Saisir les résultats", style: TextStyle(color: Colors.white)),
-                            ),
-                          )
-                        else
-                          _buildStatsSummary(game, homeGk.name, visitorGk.name),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+           // Expanded(
+           //    child: provider.games.isEmpty
+           //        ? Center(child: Text("Aucunes ventes pour le moment", style: appStyle(18, AppColors.secondary, FontWeight.w400)))
+           //        : ListView.builder(
+           //      itemCount: provider.games.length,
+           //      itemBuilder: (context, index) {
+           //        final game = provider.games[index];
+           //        final homeTeam = provider.teams.firstWhere((t) => t.id == game.homeTeamId);
+           //        final visitorTeam = provider.teams.firstWhere((t) => t.id == game.visitorTeamId);
+           //        final homeGk = provider.goalkeepers.firstWhere((g) => g.id == game.homeGkStats.goalkeeperId);
+           //        final visitorGk = provider.goalkeepers.firstWhere((g) => g.id == game.visitorGkStats.goalkeeperId);
+           //
+           //        return Card(
+           //          color: AppColors.backgroundLight,
+           //          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+           //          child: ExpansionTile(
+           //            leading: _buildVsLogos(homeTeam.urlLogo, visitorTeam.urlLogo),
+           //            iconColor: AppColors.primary,
+           //            collapsedIconColor: AppColors.secondary,
+           //            title: Text("${homeTeam.name} vs ${visitorTeam.name}", style: appStyle(15, AppColors.primary, FontWeight.bold)),
+           //            subtitle: Text(
+           //              "${game.date.day}/${game.date.month} à ${game.date.hour}h${game.date.minute.toString().padLeft(2, '0')}",
+           //              style: appStyle(13, AppColors.secondary, FontWeight.w500),
+           //            ),
+           //            children: [
+           //              // Affiche bouton ou résumé selon statut match
+           //              if (!game.isFinished)
+           //                Padding(
+           //                  padding: const EdgeInsets.all(16.0),
+           //                  child: ElevatedButton.icon(
+           //                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+           //                    onPressed: () => _showInputStatsModal(context, game, homeGk.name, visitorGk.name),
+           //                    icon: const Icon(Icons.edit, color: Colors.white),
+           //                    label: const Text("Saisir les résultats", style: TextStyle(color: Colors.white)),
+           //                  ),
+           //                )
+           //              else
+           //                _buildStatsSummary(game, homeGk.name, visitorGk.name),
+           //            ],
+           //          ),
+           //        );
+           //      },
+           //    ),
+           //  ),
           ],
         );
       },

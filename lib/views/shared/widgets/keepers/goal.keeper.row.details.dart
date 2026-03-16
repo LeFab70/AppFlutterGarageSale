@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../controllers/teams.provider.dart';
+import '../../../../controllers/garage.provider.dart';
 import '../../../../models/goalkeeper.dart';
 import '../../../../models/teams.dart';
 import '../../colors/colors.app.dart';
@@ -14,8 +14,8 @@ class GoalkeeperRowDetails extends StatelessWidget {
   void _showStatsModal(BuildContext context) {
 
     // Récupération des stats via le provider
-    final provider = Provider.of<TeamsProvider>(context, listen: false);
-    final stats = provider.getGoalkeeperTotalStats(goalkeeper.id);
+    final provider = Provider.of<GarageProvider>(context, listen: false);
+    //final stats = provider.getGoalkeeperTotalStats(goalkeeper.id);
 
     showModalBottomSheet(
       context: context,
@@ -38,9 +38,9 @@ class GoalkeeperRowDetails extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _statItem("Matchs", "${stats['matches']}"),
-                _statItem("Tirs Totaux", "${stats['shots']}"),
-                _statItem("Buts encaissés", "${stats['goals']}"),
+                // _statItem("Matchs", "${stats['matches']}"),
+                // _statItem("Tirs Totaux", "${stats['shots']}"),
+                // _statItem("Buts encaissés", "${stats['goals']}"),
               ],
             ),
             const SizedBox(height: 25),
@@ -54,7 +54,7 @@ class GoalkeeperRowDetails extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Text("${stats['pct']}%", style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                  //Text("${stats['pct']}%", style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                   const Text("Efficacité Totale", style: TextStyle(color: Colors.white70, fontSize: 12)),
                 ],
               ),

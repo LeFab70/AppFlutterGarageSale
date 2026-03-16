@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../controllers/teams.provider.dart';
+import '../../../../controllers/garage.provider.dart';
 import '../../../../models/goalkeeper.dart';
 import 'goal.keeper.row.details.dart';
 
@@ -17,7 +17,7 @@ class GoalkeeperList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<TeamsProvider>(context);
+    final provider = Provider.of<GarageProvider>(context);
 
     return gkList.isEmpty
         ? const Center(child: Text("Aucun gardien enregistré"))
@@ -26,7 +26,7 @@ class GoalkeeperList extends StatelessWidget {
             itemBuilder: (context, index) {
               final gk = gkList[index];
               // On cherche l'équipe pour afficher le logo
-              final team = provider.teams.firstWhere((t) => t.id == gk.teamId);
+              //final team = provider.teams.firstWhere((t) => t.id == gk.teamId);
 
               return Dismissible(
                 key: ValueKey(gk.id),
@@ -36,7 +36,8 @@ class GoalkeeperList extends StatelessWidget {
                   color: Colors.red,
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
-                child: GoalkeeperRowDetails(goalkeeper: gk, team: team),
+                child: Text("data"),
+                //child: GoalkeeperRowDetails(goalkeeper: gk, team: team),
               );
             },
           );

@@ -15,7 +15,7 @@ class FloatingButtons extends StatelessWidget {
       // L'action déclenchée au clic (ici, l'ouverture du BottomSheet)
       onPressed: onPressed,
       // Texte d'accessibilité affiché lors d'un appui long
-      tooltip: 'Add new match',
+      tooltip: 'Add new sale',
       // Icône centrale du bouton
       child: const Icon(Ionicons.add_circle_sharp),
 

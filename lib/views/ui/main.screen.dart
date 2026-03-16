@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:test1_appgardienbut_fabrice/views/ui/garage.page.dart';
 import 'package:test1_appgardienbut_fabrice/views/ui/gardien.page.dart';
 import 'package:test1_appgardienbut_fabrice/views/ui/stat.page.dart';
-import '../../controllers/teams.provider.dart';
+import '../../controllers/garage.provider.dart';
 import '../../models/game.dart';
 import '../../models/goalkeeper.game.stat.dart';
 import '../shared/colors/colors.app.dart';
@@ -28,7 +28,7 @@ class MainScreen extends StatelessWidget {
 
   // Modale pour programmer un match
   void _showScheduleGameModal(BuildContext context) {
-    final provider = Provider.of<TeamsProvider>(context, listen: false);
+    final provider = Provider.of<GarageProvider>(context, listen: false);
     final _gameFormKey = GlobalKey<FormState>();
 
     String? hTeamId, vTeamId;
@@ -113,39 +113,39 @@ class MainScreen extends StatelessWidget {
                   ),
 
                   // Équipe Domicile
-                  DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      labelText: "Équipe Domicile",
-                    ),
-                    items: provider.teams
-                        .map(
-                          (t) => DropdownMenuItem(
-                            value: t.id,
-                            child: Text(t.name),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (v) => setModalState(() => hTeamId = v),
-                    validator: (v) => v == null ? "Requis" : null,
-                  ),
+                  // DropdownButtonFormField<String>(
+                  //   decoration: const InputDecoration(
+                  //     labelText: "Équipe Domicile",
+                  //   ),
+                  //   items: provider.teams
+                  //       .map(
+                  //         (t) => DropdownMenuItem(
+                  //           value: t.id,
+                  //           child: Text(t.name),
+                  //         ),
+                  //       )
+                  //       .toList(),
+                  //   onChanged: (v) => setModalState(() => hTeamId = v),
+                  //   validator: (v) => v == null ? "Requis" : null,
+                  // ),
 
                   // Équipe Visiteur (exclut l'équipe domicile)
-                  DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      labelText: "Équipe Visiteur",
-                    ),
-                    items: provider.teams
-                        .where((t) => t.id != hTeamId)
-                        .map(
-                          (t) => DropdownMenuItem(
-                            value: t.id,
-                            child: Text(t.name),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (v) => setModalState(() => vTeamId = v),
-                    validator: (v) => v == null ? "Requis" : null,
-                  ),
+                  // DropdownButtonFormField<String>(
+                  //   decoration: const InputDecoration(
+                  //     labelText: "Équipe Visiteur",
+                  //   ),
+                  //   items: provider.teams
+                  //       .where((t) => t.id != hTeamId)
+                  //       .map(
+                  //         (t) => DropdownMenuItem(
+                  //           value: t.id,
+                  //           child: Text(t.name),
+                  //         ),
+                  //       )
+                  //       .toList(),
+                  //   onChanged: (v) => setModalState(() => vTeamId = v),
+                  //   validator: (v) => v == null ? "Requis" : null,
+                  // ),
 
                   const SizedBox(height: 20),
 
@@ -169,35 +169,35 @@ class MainScreen extends StatelessWidget {
                             selectedTime.minute,
                           );
 
-                          final hGk = provider.getGoalkeeperByTeam(hTeamId!);
-                          final vGk = provider.getGoalkeeperByTeam(vTeamId!);
+                          // final hGk = provider.getGoalkeeperByTeam(hTeamId!);
+                          // final vGk = provider.getGoalkeeperByTeam(vTeamId!);
 
                           // Vérifie si les gardiens existent avant création
-                          if (hGk != null && vGk != null) {
-                            provider.scheduleGame(
-                              Game(
-                                id: DateTime.now().toString(),
-                                date: fullDateTime,
-                                homeTeamId: hTeamId!,
-                                visitorTeamId: vTeamId!,
-                                whereIsGame: _location,
-                                homeGkStats: GoalkeeperGameStats(
-                                  goalkeeperId: hGk.id,
-                                ),
-                                visitorGkStats: GoalkeeperGameStats(
-                                  goalkeeperId: vGk.id,
-                                ),
-                              ),
-                            );
-                            Navigator.pop(context);
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Gardiens manquants !"),
-                                backgroundColor: Colors.redAccent,
-                              ),
-                            );
-                          }
+                          // if (hGk != null && vGk != null) {
+                          //   provider.scheduleGame(
+                          //     Game(
+                          //       id: DateTime.now().toString(),
+                          //       date: fullDateTime,
+                          //       homeTeamId: hTeamId!,
+                          //       visitorTeamId: vTeamId!,
+                          //       whereIsGame: _location,
+                          //       homeGkStats: GoalkeeperGameStats(
+                          //         goalkeeperId: hGk.id,
+                          //       ),
+                          //       visitorGkStats: GoalkeeperGameStats(
+                          //         goalkeeperId: vGk.id,
+                          //       ),
+                          //     ),
+                          //   );
+                          //   Navigator.pop(context);
+                          // } else {
+                          //   ScaffoldMessenger.of(context).showSnackBar(
+                          //     const SnackBar(
+                          //       content: Text("Gardiens manquants !"),
+                          //       backgroundColor: Colors.redAccent,
+                          //     ),
+                          //   );
+                          // }
                         }
                       },
                       child: const Text(

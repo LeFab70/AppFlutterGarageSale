@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'controllers/teams.provider.dart';
+import 'controllers/garage.provider.dart';
 import 'controllers/login.provider.dart';
 import 'controllers/main.screen.provider.dart';
 import 'root/app.garage.entry.dart';
@@ -24,7 +24,7 @@ void main() async {
         // Provider pour la connexion
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         //provider pour gerer les teams
-        ChangeNotifierProvider(create: (_) => TeamsProvider()),
+        ChangeNotifierProvider(create: (_) => GarageProvider()),
       ],
       child: const AppGarageEntry(),
     ),

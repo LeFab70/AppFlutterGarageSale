@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../controllers/teams.provider.dart';
+import '../../controllers/garage.provider.dart';
 import '../../models/goalkeeper.dart';
 import '../shared/colors/colors.app.dart';
 import '../shared/styles/app.style.dart';
@@ -30,8 +30,8 @@ class _GardienPageState extends State<GardienPage> {
         isScrollControlled: true,
         builder: (context) => StatefulBuilder(
           builder: (context, setModalState) {
-            final provider = Provider.of<TeamsProvider>(context);
-            final availableTeams = provider.teamsWithoutGoalkeeper;
+            final provider = Provider.of<GarageProvider>(context);
+           // final availableTeams = provider.teamsWithoutGoalkeeper;
 
             return Padding(
               padding: EdgeInsets.only(
@@ -66,39 +66,39 @@ class _GardienPageState extends State<GardienPage> {
                         onSaved: (v) => _height = double.parse(v!),
                       ),
                       const SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        hint: const Text("Choisir une équipe libre"),
-                        items: availableTeams
-                            .map(
-                              (t) => DropdownMenuItem(
-                                value: t.id,
-                                child: Text(t.name),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (v) => _teamId = v!,
-                        validator: (v) => v == null ? "Obligatoire" : null,
-                      ),
-                      SizedBox(
+                      // DropdownButtonFormField<String>(
+                      //   hint: const Text("Choisir une équipe libre"),
+                      //   // items: availableTeams
+                      //   //     .map(
+                      //   //       (t) => DropdownMenuItem(
+                      //   //         value: t.id,
+                      //   //         child: Text(t.name),
+                      //   //       ),
+                      //   //     )
+                      //   //     .toList(),
+                      //   onChanged: (v) => _teamId = v!,
+                      //   validator: (v) => v == null ? "Obligatoire" : null,
+                      // ),
+                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
                           ),
                           onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              provider.addGoalkeeper(
-                                Goalkeeper(
-                                  id: DateTime.now().toString(),
-                                  name: _name,
-                                  nationality: _nat,
-                                  teamId: _teamId,
-                                  height: _height,
-                                ),
-                              );
-                              Navigator.pop(context);
-                            }
+                            // if (_formKey.currentState!.validate()) {
+                            //   _formKey.currentState!.save();
+                            //   provider.addGoalkeeper(
+                            //     Goalkeeper(
+                            //       id: DateTime.now().toString(),
+                            //       name: _name,
+                            //       nationality: _nat,
+                            //       teamId: _teamId,
+                            //       height: _height,
+                            //     ),
+                            //   );
+                            //   Navigator.pop(context);
+                            // }
                           },
                           child: const Text(
                             "Assigner équipe",
@@ -116,7 +116,7 @@ class _GardienPageState extends State<GardienPage> {
       );
     }
 
-    final TeamsProvider provider = Provider.of<TeamsProvider>(context);
+    final GarageProvider provider = Provider.of<GarageProvider>(context);
     return Column(
       children: [
         Padding(
@@ -135,12 +135,12 @@ class _GardienPageState extends State<GardienPage> {
             ],
           ),
         ),
-        Expanded(
-          child: GoalkeeperList(
-            gkList: provider.goalkeepers,
-            onDelete: (gkId) => provider.deleteGoalkeeper(gkId),
-          ),
-        ),
+        // Expanded(
+        //   // child: GoalkeeperList(
+        //   //   //gkList: provider.goalkeepers,
+        //   //   //onDelete: (gkId) => provider.deleteGoalkeeper(gkId),
+        //   // ),
+        // ),
       ],
     );
   }
