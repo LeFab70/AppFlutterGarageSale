@@ -7,6 +7,7 @@ class Sale {
   final String noteItem;
   final String imageUrl;
   bool isFavorite;
+  final String garageId;
 
   Sale({
     required this.id,
@@ -16,7 +17,7 @@ class Sale {
     required this.category,
     required this.noteItem,
     required this.imageUrl,
-    this.isFavorite = false,
+    this.isFavorite = false, required this.garageId,
   });
 
   //Convertion des données pour stokage firestore
@@ -29,6 +30,8 @@ class Sale {
       'noteItem': noteItem,
       'imageUrl': imageUrl,
       'isFavorite': isFavorite,
+      'garageId': garageId,
+
     };
   }
 
@@ -43,6 +46,7 @@ class Sale {
       noteItem: map['noteItem'],
       imageUrl: map['imageUrl'] ?? "",
       isFavorite: map['isFavorite'] ?? false,
+      garageId: map['garageId'],
     );
   }
 }

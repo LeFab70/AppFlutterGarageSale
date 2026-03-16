@@ -219,6 +219,7 @@ class MainScreen extends StatelessWidget {
                             category: category,
                             noteItem: noteItem,
                             imageUrl: imageUrl,
+                            garageId: garageId
                           );
 
                           await saleProvider.addSale(garageId, sale);
