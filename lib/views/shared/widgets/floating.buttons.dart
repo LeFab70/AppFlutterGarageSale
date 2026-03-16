@@ -17,7 +17,7 @@ class FloatingButtons extends StatelessWidget {
       // Texte d'accessibilité affiché lors d'un appui long
       tooltip: 'Add new match',
       // Icône centrale du bouton
-      child: const Icon(Ionicons.football_outline),
+      child: const Icon(Ionicons.add_circle_sharp),
 
     );
   }

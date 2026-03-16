@@ -31,12 +31,12 @@ class SafeAreaWidget extends StatelessWidget {
             ),
             Expanded(
               child: BottomNavWidget(
-                icon: Ionicons.people_sharp,
+                icon: Ionicons.home_sharp,
                 onTap: () => changedIndex(1),
                 color: AppColors.buttonTextColor,
                 activeColor: AppColors.buttonBackground,
                 isActive: currentIndex == 1,
-                label: 'Equipes',
+                label: 'Garages',
               ),
             ),
 
@@ -44,12 +44,12 @@ class SafeAreaWidget extends StatelessWidget {
             const SizedBox(width: 48), //
             Expanded(
               child: BottomNavWidget(
-                icon: Ionicons.shield_outline,
+                icon: Ionicons.heart_sharp,
                 onTap: () => changedIndex(2),
                 color: AppColors.buttonTextColor,
                 activeColor: AppColors.buttonBackground,
                 isActive: currentIndex == 2,
-                label: 'Gardien',
+                label: 'Favoris',
               ),
             ),
             Expanded(

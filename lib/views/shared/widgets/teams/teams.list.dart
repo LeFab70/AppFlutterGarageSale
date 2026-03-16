@@ -19,7 +19,7 @@ class TeamsList extends StatelessWidget {
             child: Text(
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
-              "Liste d'équipe vide",
+              "Liste de garages vide",
               style: const TextStyle(fontSize: 24),
             ),
           )

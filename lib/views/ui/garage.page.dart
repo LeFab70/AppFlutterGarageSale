@@ -8,14 +8,14 @@ import '../shared/colors/colors.app.dart';
 
 import '../shared/styles/app.style.dart';
 
-class EquipePage extends StatefulWidget {
-  const EquipePage({super.key});
+class GaragePage extends StatefulWidget {
+  const GaragePage({super.key});
 
   @override
-  State<EquipePage> createState() => _EquipePageState();
+  State<GaragePage> createState() => _GaragePageState();
 }
 
-class _EquipePageState extends State<EquipePage> {
+class _GaragePageState extends State<GaragePage> {
   // Clé pour le formulaire d'ajout
   final _formKey = GlobalKey<FormState>();
 
@@ -50,7 +50,7 @@ class _EquipePageState extends State<EquipePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Nouvelle Équipe",
+                    "Nouveau garage",
                     style: appStyle(20, AppColors.textColor, FontWeight.bold),
                   ),
                   const SizedBox(height: 15),
@@ -58,7 +58,7 @@ class _EquipePageState extends State<EquipePage> {
                   // Nom de l'équipe
                   TextFormField(
                     decoration: const InputDecoration(
-                      labelText: "Nom de l'équipe",
+                      labelText: "Nom du garage",
                       prefixIcon: Icon(Icons.shield),
                     ),
                     validator: (val) =>
@@ -149,7 +149,7 @@ class _EquipePageState extends State<EquipePage> {
                         }
                       },
                       child: const Text(
-                        "Ajouter l'équipe",
+                        "Ajouter le garage",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -176,7 +176,7 @@ class _EquipePageState extends State<EquipePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Mes Équipes',
+                'Mes garages',
                 style: appStyle(30, AppColors.textColor, FontWeight.bold),
               ),
               IconButton(

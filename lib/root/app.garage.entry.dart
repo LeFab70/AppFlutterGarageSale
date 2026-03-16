@@ -19,12 +19,12 @@ class AppGarageEntry extends StatelessWidget {
             theme: ThemeData(
               scaffoldBackgroundColor: AppColors.scaffoldColor,
               floatingActionButtonTheme: FloatingActionButtonThemeData(
-                backgroundColor: AppColors.buttonBackground,
-                iconSize: 40,
-                elevation: 4,
+                backgroundColor: AppColors.primary,
+                iconSize: 50,
+                elevation: 5,
                 foregroundColor: AppColors.buttonTextColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(35.0),
+                  borderRadius: BorderRadius.circular(25.0),
                 ),
               ),
               bottomAppBarTheme: BottomAppBarThemeData(

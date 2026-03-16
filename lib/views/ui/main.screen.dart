@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test1_appgardienbut_fabrice/views/ui/equipe.page.dart';
+import 'package:test1_appgardienbut_fabrice/views/ui/garage.page.dart';
 import 'package:test1_appgardienbut_fabrice/views/ui/gardien.page.dart';
 import 'package:test1_appgardienbut_fabrice/views/ui/stat.page.dart';
 import '../../controllers/teams.provider.dart';
@@ -21,7 +21,7 @@ class MainScreen extends StatelessWidget {
   // Pages de la navigation
   final List<Widget> pageList = [
     StatPage(),
-    EquipePage(),
+    GaragePage(),
     GardienPage(),
     ProfilePage(),
   ];

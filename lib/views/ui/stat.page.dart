@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:test1_appgardienbut_fabrice/views/shared/styles/app.style.dart';
 
@@ -114,7 +115,27 @@ class _StatPageState extends State<StatPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('Mes Matchs', style: appStyle(30, AppColors.textColor, FontWeight.bold)),
+                  const Icon(Ionicons.cart_sharp,size: 30),
+                  const SizedBox(width: 8),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                          'Mes Ventes',
+                          style: appStyle(30, AppColors.textColor, FontWeight.bold)
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 1),
+                        height: 5,
+                        width: 90,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -122,7 +143,7 @@ class _StatPageState extends State<StatPage> {
             // Liste des matchs
             Expanded(
               child: provider.games.isEmpty
-                  ? Center(child: Text("Aucun match programmé", style: appStyle(18, AppColors.secondary, FontWeight.w400)))
+                  ? Center(child: Text("Aucunes ventes pour le moment", style: appStyle(18, AppColors.secondary, FontWeight.w400)))
                   : ListView.builder(
                 itemCount: provider.games.length,
                 itemBuilder: (context, index) {

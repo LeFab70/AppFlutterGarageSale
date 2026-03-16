@@ -14,7 +14,7 @@ class AppBars extends StatelessWidget implements PreferredSize {
   Widget build(BuildContext context) {
     return AppBar(
       toolbarHeight: 100.00,
-      title: Text("⚽ Stats de Gardien",style: appStyle(25, AppColors.buttonTextColor, .bold)),
+      title: Text("🏡 + ✨ Garage sale",style: appStyle(25, AppColors.buttonTextColor, .bold)),
       actions: [
         IconButton(
           onPressed: onPressed,
