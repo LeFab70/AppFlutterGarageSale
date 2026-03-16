@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test1_appgardienbut_fabrice/views/ui/garage.page.dart';
-import 'package:test1_appgardienbut_fabrice/views/ui/gardien.page.dart';
-import 'package:test1_appgardienbut_fabrice/views/ui/stat.page.dart';
+import 'garage.page.dart';
+import 'favoris.page.dart';
+import 'stat.page.dart';
 import '../../controllers/garage.provider.dart';
-import '../../models/game.dart';
-import '../../models/goalkeeper.game.stat.dart';
+import '../../controllers/sale.provider.dart';
+import '../../models/sale.model.dart';
 import '../shared/colors/colors.app.dart';
-import '../shared/styles/app.style.dart';
+import '../shared/data/sale_categories.dart';
+
 import '../shared/widgets/app.bar.dart';
 import '../shared/widgets/floating.buttons.dart';
 
@@ -22,19 +23,61 @@ class MainScreen extends StatelessWidget {
   final List<Widget> pageList = [
     StatPage(),
     GaragePage(),
-    GardienPage(),
+    FavoriPage(),
     ProfilePage(),
   ];
 
-  // Modale pour programmer un match
-  void _showScheduleGameModal(BuildContext context) {
-    final provider = Provider.of<GarageProvider>(context, listen: false);
-    final _gameFormKey = GlobalKey<FormState>();
+  // Modale pour enregistrer un vente
+  void _showSelectGarageForSale(BuildContext context) {
+    final garageProvider = Provider.of<GarageProvider>(context, listen: false);
 
-    String? hTeamId, vTeamId;
-    String _location = "Stade Municipal";
-    DateTime selectedDate = DateTime.now();
-    TimeOfDay selectedTime = TimeOfDay.now();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppColors.backgroundLight,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+          ),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Sélectionner un garage",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 15),
+
+              ...garageProvider.garages.map((g) {
+                return ListTile(
+                  leading: const Icon(Icons.home_repair_service),
+                  title: Text(g.name),
+                  subtitle: Text("${g.city} (${g.zipcode})"),
+                  onTap: () {
+                    Navigator.pop(context); // fermer la liste
+                    _showAddSaleModal(context, g.id); // ouvrir le formulaire de vente
+                  },
+                );
+              }).toList(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  void _showAddSaleModal(BuildContext context, String garageId) {
+    final saleProvider = Provider.of<SaleProvider>(context, listen: false);
+    final _formKey = GlobalKey<FormState>();
+
+    //premier element dans la list
+    String category = SaleCategories.categories.first;
+    String noteItem = "";
+    String imageUrl = "";
+    DateTime date = DateTime.now();
+    TimeOfDay start = TimeOfDay.now();
+    TimeOfDay end = TimeOfDay.now();
 
     showModalBottomSheet(
       context: context,
@@ -46,162 +89,145 @@ class MainScreen extends StatelessWidget {
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: Container(
+            padding: const EdgeInsets.all(20),
             decoration: const BoxDecoration(
               color: AppColors.backgroundLight,
               borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
             ),
-            padding: const EdgeInsets.all(20),
             child: Form(
-              key: _gameFormKey,
+              key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    "Programmer un Match",
-                    style: appStyle(20, AppColors.textColor, FontWeight.bold),
+                  const Text(
+                    "Nouvelle vente",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 15),
 
-                  // Champ Lieu
-                  TextFormField(
-                    initialValue: _location,
+                  // Catégorie (Dropdown)
+                  DropdownButtonFormField<String>(
+                    value: category,
                     decoration: const InputDecoration(
-                      labelText: "Lieu",
-                      prefixIcon: Icon(Icons.location_on),
+                      labelText: "Catégorie",
+                      prefixIcon: Icon(Icons.category),
                     ),
-                    validator: (val) =>
-                        val == null || val.isEmpty ? "Requis" : null,
-                    onSaved: (val) => _location = val!,
+                    items: SaleCategories.categories
+                        .map((c) => DropdownMenuItem(
+                      value: c,
+                      child: Text(c),
+                    ))
+                        .toList(),
+                    onChanged: (v) => setModalState(() => category = v!),
                   ),
 
-                  // Sélecteurs Date et Heure
+                  // Description
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: "Description",
+                      prefixIcon: Icon(Icons.description),
+                    ),
+                    onSaved: (v) => noteItem = v ?? "",
+                  ),
+
+                  // Image URL
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: "URL de l'image",
+                      prefixIcon: Icon(Icons.image),
+                      hintText: "https://exemple.com/photo.jpg",
+                    ),
+                    onSaved: (v) => imageUrl = v ?? "",
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // Sélecteur de date
+                  ListTile(
+                    leading: const Icon(Icons.calendar_today),
+                    title: Text(
+                      "${date.day}/${date.month}/${date.year}",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    onTap: () async {
+                      DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: date,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null) {
+                        setModalState(() => date = picked);
+                      }
+                    },
+                  ),
+
+                  // Sélecteurs d'heures
                   Row(
                     children: [
                       Expanded(
                         child: ListTile(
-                          title: Text(
-                            "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
-                          ),
-                          leading: const Icon(Icons.calendar_today),
+                          leading: const Icon(Icons.access_time),
+                          title: Text("Début : ${start.format(context)}"),
                           onTap: () async {
-                            DateTime? picked = await showDatePicker(
+                            TimeOfDay? picked = await showTimePicker(
                               context: context,
-                              initialDate: selectedDate,
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(2100),
+                              initialTime: start,
                             );
-                            if (picked != null)
-                              setModalState(() => selectedDate = picked);
+                            if (picked != null) {
+                              setModalState(() => start = picked);
+                            }
                           },
                         ),
                       ),
                       Expanded(
                         child: ListTile(
-                          title: Text(selectedTime.format(context)),
-                          leading: const Icon(Icons.access_time),
+                          leading: const Icon(Icons.access_time_filled),
+                          title: Text("Fin : ${end.format(context)}"),
                           onTap: () async {
                             TimeOfDay? picked = await showTimePicker(
                               context: context,
-                              initialTime: selectedTime,
+                              initialTime: end,
                             );
-                            if (picked != null)
-                              setModalState(() => selectedTime = picked);
+                            if (picked != null) {
+                              setModalState(() => end = picked);
+                            }
                           },
                         ),
                       ),
                     ],
                   ),
 
-                  // Équipe Domicile
-                  // DropdownButtonFormField<String>(
-                  //   decoration: const InputDecoration(
-                  //     labelText: "Équipe Domicile",
-                  //   ),
-                  //   items: provider.teams
-                  //       .map(
-                  //         (t) => DropdownMenuItem(
-                  //           value: t.id,
-                  //           child: Text(t.name),
-                  //         ),
-                  //       )
-                  //       .toList(),
-                  //   onChanged: (v) => setModalState(() => hTeamId = v),
-                  //   validator: (v) => v == null ? "Requis" : null,
-                  // ),
-
-                  // Équipe Visiteur (exclut l'équipe domicile)
-                  // DropdownButtonFormField<String>(
-                  //   decoration: const InputDecoration(
-                  //     labelText: "Équipe Visiteur",
-                  //   ),
-                  //   items: provider.teams
-                  //       .where((t) => t.id != hTeamId)
-                  //       .map(
-                  //         (t) => DropdownMenuItem(
-                  //           value: t.id,
-                  //           child: Text(t.name),
-                  //         ),
-                  //       )
-                  //       .toList(),
-                  //   onChanged: (v) => setModalState(() => vTeamId = v),
-                  //   validator: (v) => v == null ? "Requis" : null,
-                  // ),
-
                   const SizedBox(height: 20),
 
-                  // Bouton de validation
+                  // Bouton d'enregistrement
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                       ),
-                      onPressed: () {
-                        if (_gameFormKey.currentState!.validate()) {
-                          _gameFormKey.currentState!.save();
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
 
-                          // Fusion Date + Heure
-                          final fullDateTime = DateTime(
-                            selectedDate.year,
-                            selectedDate.month,
-                            selectedDate.day,
-                            selectedTime.hour,
-                            selectedTime.minute,
+                          final sale = Sale(
+                            id: DateTime.now().millisecondsSinceEpoch.toString(),
+                            dateVente: date,
+                            startTime: start.format(context),
+                            endTime: end.format(context),
+                            category: category,
+                            noteItem: noteItem,
+                            imageUrl: imageUrl,
                           );
 
-                          // final hGk = provider.getGoalkeeperByTeam(hTeamId!);
-                          // final vGk = provider.getGoalkeeperByTeam(vTeamId!);
+                          await saleProvider.addSale(garageId, sale);
 
-                          // Vérifie si les gardiens existent avant création
-                          // if (hGk != null && vGk != null) {
-                          //   provider.scheduleGame(
-                          //     Game(
-                          //       id: DateTime.now().toString(),
-                          //       date: fullDateTime,
-                          //       homeTeamId: hTeamId!,
-                          //       visitorTeamId: vTeamId!,
-                          //       whereIsGame: _location,
-                          //       homeGkStats: GoalkeeperGameStats(
-                          //         goalkeeperId: hGk.id,
-                          //       ),
-                          //       visitorGkStats: GoalkeeperGameStats(
-                          //         goalkeeperId: vGk.id,
-                          //       ),
-                          //     ),
-                          //   );
-                          //   Navigator.pop(context);
-                          // } else {
-                          //   ScaffoldMessenger.of(context).showSnackBar(
-                          //     const SnackBar(
-                          //       content: Text("Gardiens manquants !"),
-                          //       backgroundColor: Colors.redAccent,
-                          //     ),
-                          //   );
-                          // }
+                          Navigator.pop(context);
                         }
                       },
                       child: const Text(
-                        "Créer le match",
+                        "Enregistrer",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -214,6 +240,7 @@ class MainScreen extends StatelessWidget {
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +264,7 @@ class MainScreen extends StatelessWidget {
           ),
           // Bouton central pour ajouter un match
           floatingActionButton: FloatingButtons(
-            onPressed: () => _showScheduleGameModal(context),
+            onPressed: () => _showSelectGarageForSale(context),
           ),
         );
       },

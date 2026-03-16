@@ -5,6 +5,8 @@ class Sale {
   final String endTime;
   final String category;
   final String noteItem;
+  final String imageUrl;
+  bool isFavorite;
 
   Sale({
     required this.id,
@@ -13,6 +15,8 @@ class Sale {
     required this.endTime,
     required this.category,
     required this.noteItem,
+    required this.imageUrl,
+    this.isFavorite = false,
   });
 
   //Convertion des données pour stokage firestore
@@ -23,6 +27,8 @@ class Sale {
       'endTime': endTime,
       'category': category,
       'noteItem': noteItem,
+      'imageUrl': imageUrl,
+      'isFavorite': isFavorite,
     };
   }
 
@@ -35,9 +41,12 @@ class Sale {
       endTime: map['endTime'],
       category: map['category'],
       noteItem: map['noteItem'],
+      imageUrl: map['imageUrl'] ?? "",
+      isFavorite: map['isFavorite'] ?? false,
     );
   }
 }
+
 // toMap()	Convertit un objet Dart → Map pour Firestore
 // fromMap()	Convertit une Map Firestore → objet Dart
 // factory	Permet une création contrôlée et flexible de l’objet
