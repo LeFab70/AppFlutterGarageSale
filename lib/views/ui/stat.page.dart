@@ -89,12 +89,12 @@ class _StatPageState extends State<StatPage> {
                   },
 
                   children: [
-                    if (saleProvider.isLoading)
+                    if (saleProvider.isLoadingForGarage(garage.id))
                       const Padding(
                         padding: EdgeInsets.all(16),
                         child: CircularProgressIndicator(),
                       )
-                    else if (saleProvider.sales.isEmpty)
+                    else if (saleProvider.salesForGarage(garage.id).isEmpty)
                       Padding(
                         padding: const EdgeInsets.all(16),
                         child: Text(
@@ -104,8 +104,8 @@ class _StatPageState extends State<StatPage> {
                         ),
                       )
                     else
-                      ...saleProvider.sales.map(
-                            (sale) => _buildSaleRow(sale,garage.id),
+                      ...saleProvider.salesForGarage(garage.id).map(
+                            (sale) => _buildSaleRow(sale, garage.id),
                       ),
                   ],
                 ),
@@ -169,7 +169,16 @@ class _StatPageState extends State<StatPage> {
                     color: sale.isFavorite ? Colors.amber : Colors.grey,
                   ),
                   onPressed: () {
-                    saleProvider.toggleFavorite(garageId, sale);
+                    saleProvider.toggleFavorite(garageId, sale).then((err) {
+                      if (!mounted || err == null) return;
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(err),
+                          backgroundColor: Colors.red.shade400,
+                        ),
+                      );
+                    });
                   },
                 ),
 
@@ -177,7 +186,16 @@ class _StatPageState extends State<StatPage> {
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: () {
-                    saleProvider.deleteSale(garageId, sale.id);
+                    saleProvider.deleteSale(garageId, sale.id).then((err) {
+                      if (!mounted || err == null) return;
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(err),
+                          backgroundColor: Colors.red.shade400,
+                        ),
+                      );
+                    });
                   },
                 ),
               ],

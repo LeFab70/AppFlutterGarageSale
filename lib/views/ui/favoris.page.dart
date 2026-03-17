@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/garage.provider.dart';
 import '../../controllers/sale.provider.dart';
-import '../../models/sale.model.dart';
 import '../shared/colors/colors.app.dart';
 import '../shared/styles/app.style.dart';
 
@@ -15,23 +14,37 @@ class FavoriPage extends StatefulWidget {
 
 class _FavoriPageState extends State<FavoriPage> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final garageProvider =
+          Provider.of<GarageProvider>(context, listen: false);
+      final saleProvider = Provider.of<SaleProvider>(context, listen: false);
+      final garageIds = garageProvider.garages.map((g) => g.id).toList();
+      saleProvider.loadFavoriteSalesForGarages(garageIds).then((err) {
+        if (!mounted || err == null) return;
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(err),
+            backgroundColor: Colors.red.shade400,
+          ),
+        );
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final garageProvider = Provider.of<GarageProvider>(context);
     final saleProvider = Provider.of<SaleProvider>(context);
 
-    // Charger toutes les ventes de tous les garages
-    List<Sale> favoriteSales = [];
+    // Favoris (déjà filtrés côté provider)
+    final favoriteSales = saleProvider.favoriteSales;
     Map<String, String> garageNames = {};
 
     for (var g in garageProvider.garages) {
       garageNames[g.id] = g.name;
-
-      // On charge les ventes du garage
-      for (var s in saleProvider.sales) {
-        if (s.isFavorite) {
-          favoriteSales.add(s);
-        }
-      }
     }
 
     return Column(
@@ -124,8 +137,19 @@ class _FavoriPageState extends State<FavoriPage> {
                             icon: const Icon(Icons.star,
                                 color: Colors.amber),
                             onPressed: () {
-                              saleProvider.toggleFavorite(
-                                  sale.garageId, sale);
+                              saleProvider
+                                  .toggleFavorite(sale.garageId, sale)
+                                  .then((err) {
+                                if (!mounted || err == null) return;
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(err),
+                                    backgroundColor: Colors.red.shade400,
+                                  ),
+                                );
+                              });
                             },
                           ),
 

@@ -222,7 +222,19 @@ class MainScreen extends StatelessWidget {
                             garageId: garageId
                           );
 
-                          await saleProvider.addSale(garageId, sale);
+                          final err =
+                              await saleProvider.addSale(garageId, sale);
+                          if (!context.mounted) return;
+                          if (err != null) {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(err),
+                                backgroundColor: Colors.red.shade400,
+                              ),
+                            );
+                            return;
+                          }
 
                           Navigator.pop(context);
                         }

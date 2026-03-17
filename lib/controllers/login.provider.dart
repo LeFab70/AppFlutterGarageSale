@@ -14,6 +14,26 @@ class LoginProvider extends ChangeNotifier {
     debugPrint("User online ${_auth.currentUser?.email ?? "Aucun"}");
   }
 
+  String _messageFromAuthException(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'network-request-failed':
+        return "Pas de connexion internet. Vérifiez votre réseau puis réessayez.";
+      case 'user-not-found':
+      case 'wrong-password':
+      case 'invalid-credential':
+      case 'INVALID_LOGIN_CREDENTIALS':
+        return "Email ou mot de passe incorrect.";
+      case 'invalid-email':
+        return "Adresse email invalide.";
+      case 'user-disabled':
+        return "Ce compte est désactivé.";
+      case 'too-many-requests':
+        return "Trop de tentatives. Réessayez plus tard.";
+      default:
+        return "Erreur de connexion (${e.code}).";
+    }
+  }
+
   Future<String?> login({required String email, required String password}) async {
     _isLoading = true;
     notifyListeners();
@@ -24,7 +44,7 @@ class LoginProvider extends ChangeNotifier {
       return null;
     } on FirebaseAuthException catch (e) {
       debugPrint("Firebase error: ${e.code}");
-      return "Email ou mot de passe incorrect.";
+      return _messageFromAuthException(e);
     } catch (e) {
       debugPrint("Error: $e");
       return "Erreur lors de la connexion.";
@@ -60,7 +80,11 @@ class LoginProvider extends ChangeNotifier {
         return "Adresse email invalide.";
       }
 
-      return "Erreur lors de la création du compte.";
+      if (e.code == 'network-request-failed') {
+        return "Pas de connexion internet. Vérifiez votre réseau puis réessayez.";
+      }
+
+      return "Erreur lors de la création du compte (${e.code}).";
 
     } finally {
       _isLoading = false;

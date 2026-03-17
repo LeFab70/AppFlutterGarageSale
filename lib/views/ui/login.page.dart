@@ -5,7 +5,6 @@ import 'package:test1_appgardienbut_fabrice/views/shared/widgets/logo.widget.dar
 import 'package:test1_appgardienbut_fabrice/views/shared/widgets/textfield.widget.dart';
 import 'package:test1_appgardienbut_fabrice/views/ui/main.screen.dart';
 import 'package:test1_appgardienbut_fabrice/views/ui/signup.screen.dart';
-import '../shared/styles/app.style.dart';
 import '../../controllers/login.provider.dart';
 import '../shared/colors/colors.app.dart';
 
@@ -42,6 +41,10 @@ class _LoginPageState extends State<LoginPage> {
         _showMessage(error);
       } else {
         _showMessage("Connexion réussie !", isSuccess: true);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainScreen()),
+        );
       }
 
     } catch (e) {

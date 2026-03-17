@@ -27,6 +27,19 @@ class SaleService {
         .toList();
   }
 
+  Future<List<Sale>> getFavoriteSalesForGarage(String garageId) async {
+    final snapshot = await _db
+        .collection('garages')
+        .doc(garageId)
+        .collection('sales')
+        .where('isFavorite', isEqualTo: true)
+        .get();
+
+    return snapshot.docs
+        .map((doc) => Sale.fromMap(doc.id, doc.data()))
+        .toList();
+  }
+
   Future<void> deleteSale(String garageId, String saleId) async {
     await _db
         .collection('garages')
@@ -42,7 +55,7 @@ class SaleService {
         .doc(garageId)
         .collection('sales')
         .doc(sale.id)
-        .update({'isFavorite': !sale.isFavorite});
+        .update({'isFavorite': sale.isFavorite});
   }
 
 
